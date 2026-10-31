@@ -15,7 +15,7 @@ import (
 )
 
 // Exercise the Hub's production authentication and permissions with a device
-// bridge and a local application. Raw stream routing must coexist with RPC streams.
+// bridge and a local application. All byte transfers use RPC-associated streams.
 func testRPCStreams(t *testing.T, ctx context.Context, client, device *api.Session) {
 	t.Helper()
 	local, err := api.NewRouter(nil)

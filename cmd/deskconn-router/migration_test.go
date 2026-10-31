@@ -1,15 +1,9 @@
 package main_test
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/binary"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io"
 	"net"
 	"testing"
 	"time"
@@ -28,8 +22,6 @@ const (
 	userID           = "alice"
 	password         = "test-password"
 	pingProcedure    = "io.xconn.deskconn.ping"
-	relayPath        = "/file"
-	relayOperation   = "download"
 	craVerify        = "io.xconn.deskconn.account.cra.verify"
 	cryptosignVerify = "io.xconn.deskconn.account.cryptosign.verify"
 )
@@ -50,34 +42,7 @@ func unusedAddress(t *testing.T, network string) string {
 	return address
 }
 
-func writePacket(writer io.Writer, value any) error {
-	payload, err := json.Marshal(value)
-	if err != nil {
-		return err
-	}
-	if err = binary.Write(writer, binary.BigEndian, uint32(len(payload))); err != nil {
-		return err
-	}
-	_, err = writer.Write(payload)
-	return err
-}
-
-func readPacket(reader io.Reader, value any) error {
-	var length uint32
-	if err := binary.Read(reader, binary.BigEndian, &length); err != nil {
-		return err
-	}
-	if length > 4096 {
-		return errors.New("unexpected relay header size")
-	}
-	payload := make([]byte, length)
-	if _, err := io.ReadFull(reader, payload); err != nil {
-		return err
-	}
-	return json.Unmarshal(payload, value)
-}
-
-func TestHubAuthenticationRoutingAndRelay(t *testing.T) {
+func TestHubAuthenticationRoutingAndRPCStreams(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 20*time.Second)
 	defer cancel()
 	accountPublic, accountPrivate, err := auth.GenerateCryptoSignKeyPair()
@@ -195,8 +160,9 @@ func TestHubAuthenticationRoutingAndRelay(t *testing.T) {
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = browserUser.Close() })
 	require.Equal(t, "pong", browserUser.Call(pingProcedure).ExecuteContext(ctx).ArgStringOr(0, ""))
-	testRelay(t, ctx, browser, backend)
 	testRPCStreams(t, ctx, browserUser, device)
+	require.Error(t, cloudUser.Call("io.xconn.deskconn.test.transfer").ExecuteContext(ctx).Err,
+		"the cloud realm cannot reach machine endpoints")
 
 	// A replacement backend must restore both RPC and stream routing without
 	// requiring the existing users to reconnect.
@@ -215,79 +181,5 @@ func TestHubAuthenticationRoutingAndRelay(t *testing.T) {
 		return api.NewResult("reconnected")
 	}).ExecuteContext(ctx).Err)
 	require.Equal(t, "reconnected", user.Call(pingProcedure).ExecuteContext(ctx).ArgStringOr(0, ""))
-	testRelay(t, ctx, browser, replacement)
 	testRPCStreams(t, ctx, browserUser, replacementSession)
-}
-
-func testRelay(t *testing.T, ctx context.Context, client *api.WebTransportConnection, backend *api.QUICConnection) {
-	t.Helper()
-	reply := bytes.Repeat([]byte("reply"), 32*1024)
-	completed := make(chan error, 1)
-	go func() {
-		stream, err := backend.AcceptStream(ctx)
-		if err != nil {
-			completed <- err
-			return
-		}
-		defer stream.Close()
-		var header map[string]any
-		err = readPacket(stream, &header)
-		if err == nil && (header["realm"] != deviceRealm || header["op"] != relayOperation || header["path"] != relayPath) {
-			err = fmt.Errorf("unexpected relay header: %v", header)
-		}
-		if err == nil {
-			var body []byte
-			body, err = io.ReadAll(stream)
-			if err == nil && string(body) != "request" {
-				err = errors.New("request payload changed")
-			}
-		}
-		if err == nil {
-			err = writePacket(stream, map[string]bool{"ready": true})
-		}
-		if err == nil {
-			_, err = stream.WriteContext(ctx, reply)
-		}
-		if err == nil {
-			err = stream.CloseWriteContext(ctx)
-		}
-		completed <- err
-	}()
-	stream, err := client.OpenStream(ctx)
-	require.NoError(t, err)
-	require.NoError(t, writePacket(stream, map[string]any{
-		"realm": "other-realm", "op": relayOperation, "path": relayPath,
-	}))
-	var rejected map[string]any
-	require.NoError(t, readPacket(stream, &rejected))
-	require.Equal(t, "not authorized for realm", rejected["error"])
-	require.NoError(t, stream.Close())
-	for {
-		stream, err = client.OpenStream(ctx)
-		require.NoError(t, err)
-		require.NoError(t, writePacket(stream, map[string]any{
-			"realm": deviceRealm, "op": relayOperation, "path": relayPath,
-		}))
-		_, err = stream.WriteContext(ctx, []byte("request"))
-		require.NoError(t, err)
-		require.NoError(t, stream.CloseWriteContext(ctx))
-		var ready map[string]any
-		require.NoError(t, readPacket(stream, &ready))
-		if ready["error"] != nil {
-			_ = stream.Close()
-			select {
-			case <-ctx.Done():
-				t.Fatalf("destination did not become available: %v", ready["error"])
-			case <-time.After(10 * time.Millisecond):
-				continue
-			}
-		}
-		require.Equal(t, true, ready["ready"])
-		body, readErr := io.ReadAll(stream)
-		require.NoError(t, readErr)
-		require.Equal(t, reply, body)
-		require.NoError(t, stream.Close())
-		break
-	}
-	require.NoError(t, <-completed)
 }
