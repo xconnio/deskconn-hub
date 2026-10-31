@@ -71,6 +71,8 @@ github.com/xconnio/deskconn v0.1.0-alpha.94de398 h1:O8/t8oOlneYiZFHHCg/DPGYgesHH
 github.com/xconnio/deskconn v0.1.0-alpha.94de398/go.mod h1:DWZehp6VNJbY1NRGS6zC5A0YB8gVAtS79sE6JpoPwqY=
 github.com/xconnio/wampproto-go v0.0.0-20260623091423-ecb54c6c2318 h1:fwjVJyhVx02dtavXvgxfJu+Sz7XouVlbuJeLMvdReu4=
 github.com/xconnio/wampproto-go v0.0.0-20260623091423-ecb54c6c2318/go.mod h1:k2I4x+dOyJq5XW6SHbnwrqJEuRf/lO9rbF5habINuMM=
+github.com/xconnio/xconn-core/bindings/go v0.1.4 h1:8+WXAfZr/gfQzlWKDpQ4dfYkgy/LxC3Yrg8UoAcAves=
+github.com/xconnio/xconn-core/bindings/go v0.1.4/go.mod h1:4nqlV1V/QB8ryWQUKsxRUjKiuWggZW3b/GRk1H4StRc=
 github.com/xconnio/xconn-go v0.1.1-0.20261021120311-3b3492dec74d h1:TxvKsKUu70ylWdAJsR3OnNaBzWVhFRHDgMRRUVyhM6E=
 github.com/xconnio/xconn-go v0.1.1-0.20261021120311-3b3492dec74d/go.mod h1:HlT+jB6kVsslJWkpE2K4G5zFA8fgMf1pdBoLZx+GAR0=
 github.com/yusufpapurcu/wmi v1.2.4 h1:zFUKzehAFReQwLys1b/iSMl+JQGSCSjtVqQn9bBrPo0=

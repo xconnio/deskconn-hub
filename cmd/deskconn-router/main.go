@@ -47,6 +47,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer r.Close()
 	// The account service registers its procedures on the router's own realm.
 	accounts.session = r.Session()
 
