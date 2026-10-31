@@ -1,6 +1,7 @@
-# Deskconn Cloud Router
+# DeskConn Hub
 
-The main Deskconn router that connects all services and devices.
+The DeskConn Hub connects services and devices through XConn. The Go module,
+command and deployment image still use the `deskconn-router` name.
 
 ## Setup
 
@@ -17,7 +18,9 @@ cd deskconn-router
 ```bash
 DESKCONN_POSTGRES_HOST=localhost
 DESKCONN_POSTGRES_URL=postgres://router:random@${DESKCONN_POSTGRES_HOST}:5432/deskconn_account_service?sslmode=disable&search_path=deskconn
-DESKCONN_ROUTER_ADDRESS=localhost:8080
+DESKCONN_ROUTER_RAWSOCKET_ADDRESS=127.0.0.1:8084
+DESKCONN_ROUTER_QUIC_ADDRESS=127.0.0.1:8081
+DESKCONN_ROUTER_WT_ADDRESS=127.0.0.1:8082
 ```
 
 > **Note:** `DESKCONN_POSTGRES_URL` must point to the same Postgres database used by
@@ -26,6 +29,52 @@ DESKCONN_ROUTER_ADDRESS=localhost:8080
 > When running `make run-docker`, the router joins the `deskconn` Docker network created by the
 > account service (start it first) and should use
 > `DESKCONN_POSTGRES_HOST=deskconn-account-service-postgres` in `.env`.
+
+## Build
+
+Install Go 1.26, a C compiler, pkg-config and the matching XConn native SDK.
+A Rust toolchain is not needed to build the application from published releases:
+
+```sh
+make native-sdk
+make build
+make test
+```
+
+`make build-static` produces a standalone Linux executable. The Docker build
+uses the target platform's compiler and glibc SDK, with emulation for ARM64 on
+an amd64 CI runner. The final scratch image contains the binary and CA roots.
+Alpine/musl and `CGO_ENABLED=0` builds do not support the native binding.
+
+### Development migration
+
+This branch needs the unreleased shared-services binding and DeskConn relay
+adapter. It must wait for the XConn SDK/Go release and a DeskConn module release
+before updating dependency pins and landing. The current published DeskConn pin
+still brings the old Go implementation into the module graph; the development
+workspace selects the Rust-backed adapter instead. No `replace` directive is
+committed.
+
+From this checkout, with the two companion branches available:
+
+```sh
+workspace=$(mktemp -d)
+export GOWORK="$workspace/go.work"
+go work init "$PWD" ../deskconn ../xconn-core/bindings/go
+make test XCONN_SDK_DIR=/path/to/staged/sdk
+make build-static XCONN_SDK_DIR=/path/to/staged/sdk
+```
+
+Use XConn's `feat/service-attachment` and DeskConn's `feat/shared-connectivity`
+branches. Stage the SDK from that XConn branch; `make native-sdk` currently
+installs the published v0.1.4 SDK, which lacks the new service operations.
+The Docker/CI changes are prepared for the published dependency updates, not a
+replacement for those releases.
+
+The integration test uses the production account-authentication adapter and
+permission rules with a local account RPC fixture. It covers salted WAMP-CRA,
+CryptoSign, routed calls, WebTransport-to-QUIC streams, cross-realm denial,
+backend replacement and shutdown without production credentials or Postgres.
 
 ## Run
 
