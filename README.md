@@ -75,6 +75,16 @@ The integration test uses the production account-authentication adapter and
 permission rules with a local account RPC fixture. It covers salted WAMP-CRA,
 CryptoSign, routed calls, WebTransport-to-QUIC streams, cross-realm denial,
 backend replacement and shutdown without production credentials or Postgres.
+It also exercises RPC-associated uploads, downloads and bidirectional streams
+through WebTransport → Hub → QUIC device bridge → local yamux application, both
+before and after the device reconnects. The local fixture uses a Unix socket
+(TCP on Windows).
+
+The Hub needs no additional forwarding loop or stream permissions: XConn routes
+RPC stream references to the caller and callee selected by the existing WAMP
+permissions. This requires the branch's native SDK, including RPC stream bridge
+support. Existing header-based raw streams remain available for current clients;
+DeskConn applications still need adaptation before using RPC streams themselves.
 
 ## Run
 

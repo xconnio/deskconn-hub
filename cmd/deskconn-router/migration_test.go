@@ -196,6 +196,7 @@ func TestHubAuthenticationRoutingAndRelay(t *testing.T) {
 	t.Cleanup(func() { _ = browserUser.Close() })
 	require.Equal(t, "pong", browserUser.Call(pingProcedure).ExecuteContext(ctx).ArgStringOr(0, ""))
 	testRelay(t, ctx, browser, backend)
+	testRPCStreams(t, ctx, browserUser, device)
 
 	// A replacement backend must restore both RPC and stream routing without
 	// requiring the existing users to reconnect.
@@ -215,6 +216,7 @@ func TestHubAuthenticationRoutingAndRelay(t *testing.T) {
 	}).ExecuteContext(ctx).Err)
 	require.Equal(t, "reconnected", user.Call(pingProcedure).ExecuteContext(ctx).ArgStringOr(0, ""))
 	testRelay(t, ctx, browser, replacement)
+	testRPCStreams(t, ctx, browserUser, replacementSession)
 }
 
 func testRelay(t *testing.T, ctx context.Context, client *api.WebTransportConnection, backend *api.QUICConnection) {
