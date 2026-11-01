@@ -48,8 +48,9 @@ Alpine/musl and `CGO_ENABLED=0` builds do not support the native binding.
 
 ### Development migration
 
-This branch needs the unreleased shared-services binding and DeskConn relay
-adapter. It must wait for the XConn SDK/Go release and a DeskConn module release
+This branch needs the RPC stream support on XConn main and the DeskConn relay
+adapter on its migration branch. These are not in the published dependency pins.
+It must wait for the XConn SDK/Go release and a DeskConn module release
 before updating dependency pins and landing. The current published DeskConn pin
 still brings the old Go implementation into the module graph; the development
 workspace selects the Rust-backed adapter instead. No `replace` directive is
@@ -65,9 +66,9 @@ make test XCONN_SDK_DIR=/path/to/staged/sdk
 make build-static XCONN_SDK_DIR=/path/to/staged/sdk
 ```
 
-Use XConn's `feat/service-attachment` and DeskConn's `feat/shared-connectivity`
-branches. Stage the SDK from that XConn branch; `make native-sdk` currently
-installs the published v0.1.4 SDK, which lacks the new service operations.
+Use XConn's `main` and DeskConn's `feat/shared-connectivity` branches.
+Stage the SDK from XConn main; `make native-sdk` currently installs the published
+v0.1.4 SDK, which lacks RPC stream support.
 The Docker/CI changes are prepared for the published dependency updates, not a
 replacement for those releases.
 
@@ -82,8 +83,8 @@ before and after the device reconnects. The local fixture uses a Unix socket
 
 The Hub needs no additional forwarding loop or stream permissions: XConn routes
 RPC stream references to the caller and callee selected by the existing WAMP
-permissions. This requires the branch's native SDK, including RPC stream bridge
-support. The header-based raw-stream protocol is removed; DeskConn applications
+permissions. This requires a native SDK built from XConn main, including RPC
+stream bridge support. The header-based raw-stream protocol is removed; DeskConn applications
 and clients must use RPC-associated streams for routed byte transfers.
 
 ## Run
