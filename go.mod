@@ -7,7 +7,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.12.1
 	github.com/xconnio/deskconn v0.1.0-alpha.94de398
-	github.com/xconnio/xconn-core/bindings/go v0.1.4
+	github.com/xconnio/xconn-core/bindings/go v0.1.6
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.31.1
 )

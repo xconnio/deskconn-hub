@@ -48,29 +48,22 @@ Alpine/musl and `CGO_ENABLED=0` builds do not support the native binding.
 
 ### Development migration
 
-This branch needs the RPC stream support on XConn main and the DeskConn relay
-adapter on its migration branch. These are not in the published dependency pins.
-It must wait for the XConn SDK/Go release and a DeskConn module release
-before updating dependency pins and landing. The current published DeskConn pin
-still brings the old Go implementation into the module graph; the development
-workspace selects the Rust-backed adapter instead. No `replace` directive is
-committed.
+XConn's Go binding and native SDK are pinned to published version 0.1.6.
+The remaining dependency is the migrated DeskConn relay adapter: the currently
+published DeskConn module still uses the old Go implementation. Publish the
+DeskConn migration, then update this module's DeskConn requirement before landing.
 
-From this checkout, with the two companion branches available:
+Until then, test with an external workspace selecting the migrated DeskConn
+checkout and the published XConn Go module. No `replace` directive is committed:
 
 ```sh
 workspace=$(mktemp -d)
 export GOWORK="$workspace/go.work"
-go work init "$PWD" ../deskconn ../xconn-core/bindings/go
-make test XCONN_SDK_DIR=/path/to/staged/sdk
-make build-static XCONN_SDK_DIR=/path/to/staged/sdk
+go work init "$PWD" ../deskconn
+make native-sdk
+make test
+make build-static
 ```
-
-Use XConn's `main` and DeskConn's `feat/shared-connectivity` branches.
-Stage the SDK from XConn main; `make native-sdk` currently installs the published
-v0.1.4 SDK, which lacks RPC stream support.
-The Docker/CI changes are prepared for the published dependency updates, not a
-replacement for those releases.
 
 The integration test uses the production account-authentication adapter and
 permission rules with a local account RPC fixture. It covers salted WAMP-CRA,
@@ -83,8 +76,7 @@ before and after the device reconnects. The local fixture uses a Unix socket
 
 The Hub needs no additional forwarding loop or stream permissions: XConn routes
 RPC stream references to the caller and callee selected by the existing WAMP
-permissions. This requires a native SDK built from XConn main, including RPC
-stream bridge support. The header-based raw-stream protocol is removed; DeskConn applications
+permissions. The published 0.1.6 SDK includes RPC stream bridge support. The header-based raw-stream protocol is removed; DeskConn applications
 and clients must use RPC-associated streams for routed byte transfers.
 
 ## Run
