@@ -46,24 +46,11 @@ uses the target platform's compiler and glibc SDK, with emulation for ARM64 on
 an amd64 CI runner. The final scratch image contains the binary and CA roots.
 Alpine/musl and `CGO_ENABLED=0` builds do not support the native binding.
 
-### Development migration
+### RPC stream migration
 
-XConn's Go binding and native SDK are pinned to published version 0.1.6.
-The remaining dependency is the migrated DeskConn relay adapter: the currently
-published DeskConn module still uses the old Go implementation. Publish the
-DeskConn migration, then update this module's DeskConn requirement before landing.
-
-Until then, test with an external workspace selecting the migrated DeskConn
-checkout and the published XConn Go module. No `replace` directive is committed:
-
-```sh
-workspace=$(mktemp -d)
-export GOWORK="$workspace/go.work"
-go work init "$PWD" ../deskconn
-make native-sdk
-make test
-make build-static
-```
+The Go binding and native SDK use published XConn 0.1.6 artifacts. The DeskConn
+module is pinned to its migrated, pushed commit, so ordinary `make build` and
+`make test` need no sibling source checkout or Go workspace.
 
 The integration test uses the production account-authentication adapter and
 permission rules with a local account RPC fixture. It covers salted WAMP-CRA,
