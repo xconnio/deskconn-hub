@@ -47,6 +47,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer r.Close()
 	// The account service registers its procedures on the router's own realm.
 	accounts.session = r.Session()
 
@@ -76,5 +77,5 @@ func loadTLSConfig() (*tls.Config, error) {
 		return nil, fmt.Errorf("load TLS key pair: %w", err)
 	}
 	log.Infof("using the certificate in %s", certFile)
-	return &tls.Config{Certificates: []tls.Certificate{cert}}, nil
+	return &tls.Config{MinVersion: tls.VersionTLS12, Certificates: []tls.Certificate{cert}}, nil
 }

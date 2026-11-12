@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/xconnio/deskconn/relay"
-	"github.com/xconnio/wampproto-go/auth"
-	"github.com/xconnio/xconn-go"
+	"github.com/xconnio/xconn-core/bindings/go"
+	"github.com/xconnio/xconn-core/bindings/go/auth"
 )
 
 // The account service backend: it keeps the accounts and machines, and the router asks it
@@ -86,7 +86,7 @@ func machinesFromDatabase(databaseURL string) func(context.Context) ([]relay.Mac
 func (a *accountService) authenticate(request auth.Request) (auth.Response, error) {
 	switch request.AuthMethod() {
 	case auth.MethodCRA:
-		callResp := a.session.Call(procedureCRAVerify).Args(request.AuthID(), request.Realm()).Do()
+		callResp := a.session.Call(procedureCRAVerify).Args(request.AuthID(), request.Realm()).Execute()
 		if callResp.Err != nil {
 			return nil, callResp.Err
 		}
@@ -138,7 +138,7 @@ func (a *accountService) authenticate(request auth.Request) (auth.Response, erro
 		}
 
 		callResp := a.session.Call(procedureCryptosignVerify).Args(request.AuthID(), cryptosignRequest.PublicKey(),
-			request.Realm()).Do()
+			request.Realm()).Execute()
 		if callResp.Err != nil {
 			return nil, callResp.Err
 		}
