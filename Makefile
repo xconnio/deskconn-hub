@@ -13,7 +13,7 @@ native-check:
 native-sdk:
 	@set -e; script=$$(mktemp); \
 	trap 'rm -f "$$script"' EXIT; \
-	curl -fLsS https://raw.githubusercontent.com/xconnio/xconn/v0.1.6/scripts/install-xconn-sdk.sh -o "$$script"; \
+	curl -fLsS https://raw.githubusercontent.com/xconnio/xconn/v0.6.0/scripts/install-xconn-sdk.sh -o "$$script"; \
 	sh "$$script"
 
 test: native-check
