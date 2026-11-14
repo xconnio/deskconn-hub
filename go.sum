@@ -22,8 +22,6 @@ github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UV
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
-github.com/xconnio/deskconn v0.1.0-alpha.a491135 h1:gzZ3wtGzxMhDrc7ha+i1Dto47JyoPQJmQ/clIrdPpTU=
-github.com/xconnio/deskconn v0.1.0-alpha.a491135/go.mod h1:FWU/DA1Jq+q+/zZjr7al4dvCK/soaIEojk8SlFkREu8=
 github.com/xconnio/xconn/bindings/go v0.6.0 h1:aTY9DVt8Zv3S3VYinzceYr4otL6ZzJAmxAupfSjGALo=
 github.com/xconnio/xconn/bindings/go v0.6.0/go.mod h1:4GUh3M0yrfM9z8EHvzpPLss6GkJ6KvyNLMgH2FsDfa8=
 go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=

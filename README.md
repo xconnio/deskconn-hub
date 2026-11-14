@@ -48,9 +48,9 @@ Alpine/musl and `CGO_ENABLED=0` builds do not support the native binding.
 
 ### RPC stream migration
 
-The Go binding and native SDK use published XConn 0.1.6 artifacts. The DeskConn
-module is pinned to its migrated, pushed commit, so ordinary `make build` and
-`make test` need no sibling source checkout or Go workspace.
+The relay router and its permission policy live in `internal/relay`. The Hub
+uses the published XConn Go binding and native SDK directly; it does not depend
+on the DeskConn daemon repository or a sibling source checkout.
 
 The integration test uses the production account-authentication adapter and
 permission rules with a local account RPC fixture. It covers salted WAMP-CRA,

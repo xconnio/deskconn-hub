@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	hub "github.com/xconnio/deskconn-router/cmd/deskconn-router"
-	"github.com/xconnio/deskconn/relay"
+	"github.com/xconnio/deskconn-router/internal/relay"
 	api "github.com/xconnio/xconn/bindings/go"
 	"github.com/xconnio/xconn/bindings/go/auth"
 )

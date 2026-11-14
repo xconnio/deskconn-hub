@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"github.com/xconnio/deskconn/relay"
+	"github.com/xconnio/deskconn-router/internal/relay"
 )
 
 // NewAccountRouter exercises the production account adapter with test listeners
