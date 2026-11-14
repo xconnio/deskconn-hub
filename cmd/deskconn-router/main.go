@@ -10,7 +10,7 @@ import (
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/xconnio/deskconn/relay"
+	"github.com/xconnio/deskconn-router/internal/relay"
 )
 
 // The Deskconn cloud router with the account service as its backend. To run it with your

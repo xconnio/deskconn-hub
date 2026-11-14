@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/xconnio/deskconn/relay"
+	"github.com/xconnio/deskconn-router/internal/relay"
 	"github.com/xconnio/xconn/bindings/go"
 	"github.com/xconnio/xconn/bindings/go/auth"
 )
