@@ -1,7 +1,7 @@
 services:
-  deskconn-router:
-    image: xconnio/deskconn-router:latest
-    container_name: deskconn-router
+  deskconn-hub:
+    image: xconnio/deskconn-hub:latest
+    container_name: deskconn-hub
     env_file:
       - .env
     ports:
