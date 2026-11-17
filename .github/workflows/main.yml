@@ -1,4 +1,4 @@
-name: deskconn router CI
+name: deskconn hub CI
 
 on:
   push:

@@ -11,7 +11,7 @@ RUN make native-sdk && make build-static
 
 FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /build/deskconn-router /deskconn-router
+COPY --from=builder /build/deskconn-hub /deskconn-hub
 WORKDIR /app
 
-ENTRYPOINT ["/deskconn-router"]
+ENTRYPOINT ["/deskconn-hub"]

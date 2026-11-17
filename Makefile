@@ -1,4 +1,4 @@
-IMAGE := xconnio/deskconn-router
+IMAGE := xconnio/deskconn-hub
 VERSION := $(shell git describe --tags --always)
 export CGO_ENABLED := 1
 
@@ -23,14 +23,14 @@ lint:
 	golangci-lint run
 
 build: native-check
-	go build github.com/xconnio/deskconn-router/cmd/deskconn-router
+	go build github.com/xconnio/deskconn-router/cmd/deskconn-hub
 
 build-static: native-check
 	@test "$$(uname -s)" = Linux || (echo "Fully static builds support Linux only"; exit 1)
-	go build -tags xconn_static,netgo,osusergo -ldflags "-s -w -linkmode external -extldflags '-static -Wl,--gc-sections'" github.com/xconnio/deskconn-router/cmd/deskconn-router
+	go build -tags xconn_static,netgo,osusergo -ldflags "-s -w -linkmode external -extldflags '-static -Wl,--gc-sections'" github.com/xconnio/deskconn-router/cmd/deskconn-hub
 
 run: native-check
-	go run github.com/xconnio/deskconn-router/cmd/deskconn-router
+	go run github.com/xconnio/deskconn-router/cmd/deskconn-hub
 
 DOCKER_BUILD := docker buildx build -t $(IMAGE):$(VERSION) -t $(IMAGE):latest
 

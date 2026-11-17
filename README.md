@@ -1,7 +1,8 @@
 # DeskConn Hub
 
-The DeskConn Hub connects services and devices through XConn. The Go module,
-command and deployment image still use the `deskconn-router` name.
+The DeskConn Hub connects services and devices through XConn. It is built as the
+`deskconn-hub` command and published as the `xconnio/deskconn-hub` Docker image; the Go module
+and repository still use the `deskconn-router` name.
 
 ## Setup
 
@@ -26,7 +27,7 @@ DESKCONN_ROUTER_WT_ADDRESS=127.0.0.1:8082
 > **Note:** `DESKCONN_POSTGRES_URL` must point to the same Postgres database used by
 > the [account service](https://github.com/xconnio/deskconn-account-service).
 >
-> When running `make run-docker`, the router joins the `deskconn` Docker network created by the
+> When running `make run-docker`, the Hub joins the `deskconn` Docker network created by the
 > account service (start it first) and should use
 > `DESKCONN_POSTGRES_HOST=deskconn-account-service-postgres` in `.env`.
 
@@ -89,7 +90,7 @@ in `relay.Config`:
 Machines can also be added and removed at runtime with `Router.AddMachine` and `Router.RemoveMachine`, or by
 calling `io.xconn.deskconn.realm.add` / `io.xconn.deskconn.realm.remove` (realm, authid) with a role allowed to.
 
-`cmd/deskconn-router` plugs in the account service; a minimal router with its own logic looks like this:
+`cmd/deskconn-hub` plugs in the account service; a minimal router with its own logic looks like this:
 
 ```go
 r, err := relay.New(ctx, relay.Config{

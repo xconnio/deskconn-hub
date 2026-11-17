@@ -42,5 +42,5 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            docker pull xconnio/deskconn-router:latest
-            sudo systemctl restart deskconn-router.service
+            docker pull xconnio/deskconn-hub:latest
+            sudo systemctl restart deskconn-hub.service

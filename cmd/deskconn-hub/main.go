@@ -13,7 +13,7 @@ import (
 	"github.com/xconnio/deskconn-router/internal/relay"
 )
 
-// The Deskconn cloud router with the account service as its backend. To run it with your
+// The DeskConn Hub, a cloud router with the account service as its backend. To run it with your
 // own accounts, build a main like this one with your own relay.Config callbacks.
 func main() {
 	_ = godotenv.Load()
