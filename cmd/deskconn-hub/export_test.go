@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/xconnio/deskconn-router/internal/relay"
+	"github.com/xconnio/xconn/bindings/go"
+	"github.com/xconnio/xconn/bindings/go/auth"
 )
 
 // NewAccountRouter exercises the production account adapter with test listeners
@@ -20,4 +22,10 @@ func NewAccountRouter(ctx context.Context, config relay.Config) (*relay.Router, 
 	}
 	accounts.session = router.Session()
 	return router, nil
+}
+
+// AuthenticateAccount exposes the production authentication adapter to tests.
+func AuthenticateAccount(session *xconn.Session, request auth.Request) (auth.Response, error) {
+	accounts := &accountService{session: session}
+	return accounts.authenticate(request)
 }

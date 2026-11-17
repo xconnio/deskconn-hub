@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/xconnio/deskconn-router/internal/relay"
 	"github.com/xconnio/xconn/bindings/go"
@@ -84,9 +85,12 @@ func machinesFromDatabase(databaseURL string) func(context.Context) ([]relay.Mac
 }
 
 func (a *accountService) authenticate(request auth.Request) (auth.Response, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	switch request.AuthMethod() {
 	case auth.MethodCRA:
-		callResp := a.session.Call(procedureCRAVerify).Args(request.AuthID(), request.Realm()).Execute()
+		callResp := a.session.Call(procedureCRAVerify).Args(request.AuthID(), request.Realm()).ExecuteContext(ctx)
 		if callResp.Err != nil {
 			return nil, callResp.Err
 		}
@@ -138,7 +142,7 @@ func (a *accountService) authenticate(request auth.Request) (auth.Response, erro
 		}
 
 		callResp := a.session.Call(procedureCryptosignVerify).Args(request.AuthID(), cryptosignRequest.PublicKey(),
-			request.Realm()).Execute()
+			request.Realm()).ExecuteContext(ctx)
 		if callResp.Err != nil {
 			return nil, callResp.Err
 		}
