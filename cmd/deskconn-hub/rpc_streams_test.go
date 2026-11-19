@@ -23,7 +23,7 @@ func testRPCStreams(t *testing.T, ctx context.Context, client, device *api.Sessi
 	defer local.Close()
 	require.NoError(t, local.AddRealm("application", &api.RealmConfig{Roles: []api.RealmRole{{
 		Name: "anonymous", Permissions: []api.Permission{{
-			URI: "io.xconn.deskconn.test.", MatchPolicy: "prefix", AllowCall: true, AllowRegister: true,
+			URI: "com.deskconn.test.", MatchPolicy: "prefix", AllowCall: true, AllowRegister: true,
 		}},
 	}}}))
 	server := api.NewServer(local, nil, nil)
@@ -46,8 +46,8 @@ func testRPCStreams(t *testing.T, ctx context.Context, client, device *api.Sessi
 	target, err := api.ConnectInMemory(local, "application") //nolint:contextcheck // No context API.
 	require.NoError(t, err)
 	defer target.Close()
-	const transferProcedure = "io.xconn.deskconn.test.transfer"
-	const shellProcedure = "io.xconn.deskconn.test.shell"
+	const transferProcedure = "com.deskconn.test.transfer"
+	const shellProcedure = "com.deskconn.test.shell"
 	payload := bytes.Repeat([]byte("hub transfer"), 128*1024)
 	require.NoError(t, application.Register(transferProcedure,
 		func(_ context.Context, inv *api.Invocation) *api.Result {

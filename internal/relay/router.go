@@ -25,19 +25,19 @@ const (
 	CloudRealm = "io.xconn.deskconn"
 
 	// ProcedureAddRealm adds a machine at runtime: called with its realm and authid.
-	ProcedureAddRealm = "io.xconn.deskconn.realm.add"
+	ProcedureAddRealm = "com.deskconn.realm.add"
 	// ProcedureRemoveRealm removes a machine at runtime: called with its realm and authid.
-	ProcedureRemoveRealm = "io.xconn.deskconn.realm.remove"
+	ProcedureRemoveRealm = "com.deskconn.realm.remove"
 
 	// DeskconndPrefix is where a machine's procedures live, in its realm.
-	DeskconndPrefix = "io.xconn.deskconn."
+	DeskconndPrefix = "com.deskconn."
 	// AdminPrefix is where a machine's procedures for only some of its users live: which,
 	// is up to Config.UserRoles.
-	AdminPrefix = "io.xconn.deskconn.admin."
+	AdminPrefix = "com.deskconn.admin."
 
-	procedureWebRTCOffer     = "io.xconn.webrtc.offer"
-	topicOffererOnCandidate  = "io.xconn.webrtc.offerer.on_candidate"
-	topicAnswererOnCandidate = "io.xconn.webrtc.answerer.on_candidate"
+	procedureWebRTCOffer     = "com.deskconn.webrtc.offer"
+	topicOffererOnCandidate  = "com.deskconn.webrtc.offerer.on_candidate"
+	topicAnswererOnCandidate = "com.deskconn.webrtc.answerer.on_candidate"
 
 	machineAuthRolePrefix = "xconnio:deskconn:desktop:"
 
@@ -53,7 +53,7 @@ const (
 // AppPrefixes are where apps other than deskconnd keep their procedures, in a machine's
 // realm: like DeskconndPrefix, the machine may register them and its users call them.
 func AppPrefixes() []string {
-	return []string{"io.xconn.remotecontrol.", "io.xconn.media."}
+	return []string{"com.deskconn.remotecontrol.", "com.deskconn.media."}
 }
 
 // Machine is a machine the router serves, in a realm of its own. Its daemon joins that realm
@@ -263,7 +263,7 @@ func (r *Router) AddMachine(machine Machine) error {
 		{URI: topicAnswererOnCandidate, MatchPolicy: MatchExact, AllowSubscribe: true},
 		{URI: topicOffererOnCandidate, MatchPolicy: MatchExact, AllowPublish: true},
 		{URI: "wamp.session.on_leave", MatchPolicy: MatchExact, AllowSubscribe: true},
-		{URI: "io.xconn.deskconn.desktop.detach", MatchPolicy: MatchExact, AllowCall: true},
+		{URI: "com.deskconn.desktop.detach", MatchPolicy: MatchExact, AllowCall: true},
 	}
 	for _, prefix := range AppPrefixes() {
 		realmPermissions = append(realmPermissions,
