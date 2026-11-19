@@ -91,7 +91,7 @@ func TestHubAuthenticationRoutingAndRPCStreams(t *testing.T) {
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = accounts.Close() })
 	require.Equal(t, "xconnio:deskconn:cloud:service:account", accounts.Details().AuthRole())
-	key := string(auth.DeriveWAMPCRAKey("salt", password, 1000, 32))
+	key := string(auth.DeriveWAMPCRAKey("salt", password, 2000, 32))
 	require.NoError(t, accounts.Register(craVerify, func(_ context.Context, inv *api.Invocation) *api.Result {
 		if inv.ArgStringOr(0, "") != userID {
 			return api.NewResultError("wamp.error.not_authorized")
@@ -101,7 +101,7 @@ func TestHubAuthenticationRoutingAndRPCStreams(t *testing.T) {
 			role = "user:owner"
 		}
 		return api.NewResult(map[string]any{
-			"authrole": role, "password": key, "salt": "salt", "iteration": 1000, "key_length": 32,
+			"authrole": role, "password": key, "salt": "salt", "iterations": 2000, "key_length": 32,
 		})
 	}).ExecuteContext(ctx).Err)
 	require.NoError(t, accounts.Register(cryptosignVerify, func(_ context.Context, inv *api.Invocation) *api.Result {
