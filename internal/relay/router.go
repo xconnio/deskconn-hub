@@ -22,7 +22,7 @@ import (
 const (
 	// CloudRealm is the realm users, services and apps join; each machine also gets a realm
 	// of its own (see Machine).
-	CloudRealm = "io.xconn.deskconn"
+	CloudRealm = "com.deskconn"
 
 	// ProcedureAddRealm adds a machine at runtime: called with its realm and authid.
 	ProcedureAddRealm = "com.deskconn.realm.add"

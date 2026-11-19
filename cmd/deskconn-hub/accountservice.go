@@ -35,7 +35,7 @@ const (
 	ciAuthID    = "deskconn-ci"
 	ciPublicKey = "af12b0d04d8e2e468e31115d6c7ca665ff39d7dd78455ae2e3f73f61962e16bb"
 
-	// A user's role on the system realm (io.xconn.deskconn), by how they authenticated. On
+	// A user's role on the system realm (com.deskconn), by how they authenticated. On
 	// a desktop realm they get one of the desktop roles below instead.
 	craUserAuthRole        = "user:cra"
 	cryptosignUserAuthRole = "user:cryptosign"
