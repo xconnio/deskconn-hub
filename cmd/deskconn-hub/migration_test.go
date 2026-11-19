@@ -21,9 +21,9 @@ const (
 	deviceID         = "backend"
 	userID           = "alice"
 	password         = "test-password"
-	pingProcedure    = "io.xconn.deskconn.ping"
-	craVerify        = "io.xconn.deskconn.account.cra.verify"
-	cryptosignVerify = "io.xconn.deskconn.account.cryptosign.verify"
+	pingProcedure    = "com.deskconn.ping"
+	craVerify        = "com.deskconn.account.cra.verify"
+	cryptosignVerify = "com.deskconn.account.cryptosign.verify"
 )
 
 func unusedAddress(t *testing.T, network string) string {
@@ -161,7 +161,7 @@ func TestHubAuthenticationRoutingAndRPCStreams(t *testing.T) {
 	t.Cleanup(func() { _ = browserUser.Close() })
 	require.Equal(t, "pong", browserUser.Call(pingProcedure).ExecuteContext(ctx).ArgStringOr(0, ""))
 	testRPCStreams(t, ctx, browserUser, device)
-	require.Error(t, cloudUser.Call("io.xconn.deskconn.test.transfer").ExecuteContext(ctx).Err,
+	require.Error(t, cloudUser.Call("com.deskconn.test.transfer").ExecuteContext(ctx).Err,
 		"the cloud realm cannot reach machine endpoints")
 
 	// A replacement backend must restore both RPC and stream routing without

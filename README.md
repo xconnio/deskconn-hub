@@ -88,7 +88,7 @@ in `relay.Config`:
 | `UserRoles`          | Users' roles in a machine's realm and what each may do there; RPC streams follow those permissions |
 
 Machines can also be added and removed at runtime with `Router.AddMachine` and `Router.RemoveMachine`, or by
-calling `io.xconn.deskconn.realm.add` / `io.xconn.deskconn.realm.remove` (realm, authid) with a role allowed to.
+calling `com.deskconn.realm.add` / `com.deskconn.realm.remove` (realm, authid) with a role allowed to.
 
 `cmd/deskconn-hub` plugs in the account service; a minimal router with its own logic looks like this:
 

@@ -19,8 +19,8 @@ import (
 
 const (
 	userRole         = "user"
-	procedurePing    = "io.xconn.deskconn.ping"
-	procedureAppPing = "io.xconn.remotecontrol.ping"
+	procedurePing    = "com.deskconn.ping"
+	procedureAppPing = "com.deskconn.remotecontrol.ping"
 	machineAuthID    = "machine-1"
 	machineRealm     = "realm-1"
 	userAuthID       = "alice"
@@ -118,7 +118,7 @@ func TestCustomCallbacks(t *testing.T) {
 	callResp = user.Call(procedureAppPing).Execute()
 	require.NoError(t, callResp.Err)
 	require.Equal(t, "app pong", callResp.ArgStringOr(0, ""))
-	resp = machine.Register("io.xconn.other.ping", func(context.Context, *xconn.Invocation) *xconn.Result {
+	resp = machine.Register("com.other.ping", func(context.Context, *xconn.Invocation) *xconn.Result {
 		return xconn.NewResult()
 	}).Execute()
 	require.Error(t, resp.Err)
