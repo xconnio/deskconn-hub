@@ -112,9 +112,9 @@ func (a *accountService) authenticate(request auth.Request) (auth.Response, erro
 		if err != nil {
 			return nil, fmt.Errorf("failed to get salt for user(%s): %w", request.AuthID(), err)
 		}
-		iteration := dict.Int64Or("iteration", 1000)
+		iterations := dict.Int64Or("iterations", 1000)
 		keyLength := dict.Int64Or("key_length", 32)
-		return auth.NewCRAResponseSalted(request.AuthID(), authrole, secret, salt, int(iteration), int(keyLength), 0), nil
+		return auth.NewCRAResponseSalted(request.AuthID(), authrole, secret, salt, int(iterations), int(keyLength), 0), nil
 
 	case auth.MethodCryptoSign:
 		cryptosignRequest, ok := request.(*auth.RequestCryptoSign)
