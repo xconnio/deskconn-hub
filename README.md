@@ -64,7 +64,7 @@ before and after the device reconnects. The local fixture uses a Unix socket
 
 The Hub needs no additional forwarding loop or stream permissions: XConn routes
 RPC stream references to the caller and callee selected by the existing WAMP
-permissions. The published 0.1.6 SDK includes RPC stream bridge support. The header-based raw-stream protocol is removed; DeskConn applications
+permissions. The published XConn SDK includes RPC stream bridge support. The header-based raw-stream protocol is removed; DeskConn applications
 and clients must use RPC-associated streams for routed byte transfers.
 
 ## Run
