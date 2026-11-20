@@ -8,7 +8,7 @@ services:
       - "8081:8081/udp"
       - "8082:8082/udp"
       - "8083:8083"
-      - "8084:8084"
+      - "127.0.0.1:8084:8084"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     restart: unless-stopped
