@@ -57,6 +57,7 @@ func accountServicePublicKey() string {
 // accountService authenticates sessions by asking the account service, over session.
 type accountService struct {
 	session *xconn.Session
+	logins  loginThrottle
 }
 
 // machinesFromDatabase reads the attached machines from the account service's database.
@@ -90,6 +91,9 @@ func (a *accountService) authenticate(request auth.Request) (auth.Response, erro
 
 	switch request.AuthMethod() {
 	case auth.MethodCRA:
+		if err := a.logins.admit(request.AuthID()); err != nil {
+			return nil, err
+		}
 		callResp := a.session.Call(procedureCRAVerify).Args(request.AuthID(), request.Realm()).ExecuteContext(ctx)
 		if callResp.Err != nil {
 			return nil, callResp.Err
